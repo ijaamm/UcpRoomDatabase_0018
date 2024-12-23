@@ -1,5 +1,6 @@
 package com.example.ucp2.ui.view.dokter
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +10,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -30,6 +33,8 @@ import com.example.ucp2.data.entity.Dokter
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -38,8 +43,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ucp2.R
 import com.example.ucp2.ui.customwidget.TopAppBar
 import com.example.ucp2.viewmodel.HomeDrUiState
 import com.example.ucp2.viewmodel.HomeDrViewModel
@@ -55,7 +65,7 @@ fun CardDokter(
     Card(
         modifier = modifier
             .fillMaxWidth(1F)
-            .padding(20.dp),
+            .padding(10.dp),
         onClick = onClick
     ) {
         Column(
@@ -90,7 +100,7 @@ fun CardDokter(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = dr.id,
+                    text = dr.jamPraktik,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
@@ -136,6 +146,93 @@ fun ListDokter(
             CardDokter(
                 dr = dr
             )
+        }
+    }
+}
+
+@Composable
+fun Header(
+    namaApp: String,
+    ID: Int
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        Color(0xFF9657b8),
+                        Color(0xFF000080)
+                    )
+                )
+            )
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(RoundedCornerShape(40.dp))
+                    .background(Color.White.copy(alpha = 0.3f))
+            ) {
+                Image(
+                    painter = painterResource(ID),
+                    contentDescription = "Profil Perusahaan",
+                    modifier = Modifier
+                        .size(70.dp)
+                        .clip(RoundedCornerShape(35.dp))
+                        .align(Alignment.Center),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = namaApp,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = "ikon",
+                        tint = Color.White
+                    )
+
+                    Spacer(
+                        modifier = Modifier.width(100.dp)
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.Person,
+                        contentDescription = "customer service",
+                        tint = Color.White
+                    )
+
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "search",
+                        tint = Color.White
+
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "Mari Hidup Sehat",
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.8f)
+                )
+            }
         }
     }
 }
@@ -200,11 +297,17 @@ fun HomeDrView(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                judul = "Daftar Dokter",
-                showBackButton = false,
-                onBack = { },
-            )
+            Column {
+                Header(
+                    namaApp = "IrMedika",
+                    ID = R.drawable.gost2
+                )
+                TopAppBar(
+                    judul = "Daftar Dokter",
+                    showBackButton = false,
+                    onBack = { },
+                )
+            }
         }
     ) { innerPadding ->
         val homeDrUiState by viewModel.homeDrUiState.collectAsState()
