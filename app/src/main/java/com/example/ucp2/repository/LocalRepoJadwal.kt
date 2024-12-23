@@ -1,6 +1,7 @@
 package com.example.ucp2.repository
 
 import com.example.ucp2.data.dao.JadwalDao
+import com.example.ucp2.data.entity.Dokter
 import com.example.ucp2.data.entity.Jadwal
 import kotlinx.coroutines.flow.Flow
 
@@ -10,7 +11,7 @@ class LocalRepoJadwal (
 
     //untuk insert data jadwal ke database
     override suspend fun insertJadwal(jadwal: Jadwal) {
-    jadwalDao.insertJadwal(jadwal)
+        jadwalDao.insertJadwal(jadwal)
     }
 
     //untuk mengambil data jadwal dari database
@@ -31,5 +32,9 @@ class LocalRepoJadwal (
     //untuk mengupdate data jadwal dari database
     override suspend fun updateJadwal(jadwal: Jadwal) {
         jadwalDao.updateJadwal(jadwal)
+    }
+
+    override fun getAllNmDokter(): Flow<List<Dokter>> {
+        return jadwalDao.getAllNmDokter()
     }
 }
