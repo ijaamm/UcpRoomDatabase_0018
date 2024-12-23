@@ -1,5 +1,8 @@
 package com.example.ucp2.ui.view.dokter
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,12 +28,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ucp2.data.entity.Dokter
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.draw.shadow
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ucp2.ui.customwidget.TopAppBar
 import com.example.ucp2.viewmodel.HomeDrUiState
+import com.example.ucp2.viewmodel.HomeDrViewModel
+import com.example.ucp2.viewmodel.PenyediaViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -177,3 +190,100 @@ fun BodyHomeDr(
     }
 }
 
+@Composable
+fun HomeDrView(
+    viewModel: HomeDrViewModel = viewModel(factory = PenyediaViewModel.Factory),
+    onAddDr: () -> Unit = { },
+    onAddJad: () -> Unit = { },
+    modifier: Modifier = Modifier
+) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                judul = "Daftar Dokter",
+                showBackButton = false,
+                onBack = { },
+            )
+        }
+    ) { innerPadding ->
+        val homeDrUiState by viewModel.homeDrUiState.collectAsState()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp) // Memberikan jarak antar tombol
+            ) {
+                // Tombol Tambah Dokter
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp)
+                        .clickable { onAddDr() }
+                        .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                        .background(Color(0XFF000080), shape = RoundedCornerShape(8.dp))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Tambah Dokter Icon",
+                            modifier = Modifier.padding(end = 8.dp),
+                            tint = Color.White
+                        )
+                        Text(
+                            text = "Tambah Dokter",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = Color.White
+                        )
+                    }
+                }
+
+                // Tombol Jadwal
+                Box(
+                    modifier = Modifier
+                        .weight(1f) // Membuat tombol ini mengisi ruang yang tersedia
+                        .padding(8.dp)
+                        .clickable { onAddJad() }
+                        .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                        .background(Color(0XFF000080), shape = RoundedCornerShape(8.dp)) // Ubah warna jika perlu
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = "Jadwal Icon",
+                            modifier = Modifier.padding(end = 8.dp),
+                            tint = Color.White
+                        )
+                        Text(
+                            text = "Jadwal Pasien",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+
+            // Tampilan BodyHomeDr
+            BodyHomeDr(
+                homeDrUiState = homeDrUiState,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
+}
