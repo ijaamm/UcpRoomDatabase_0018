@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ucp2.data.entity.Dokter
 import com.example.ucp2.data.entity.Jadwal
 import com.example.ucp2.repository.RepositoryJadwal
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 
@@ -14,6 +16,7 @@ class JadwalViewModel(
     private val repositoryJadwal: RepositoryJadwal,
 ) : ViewModel(){
 
+    val listDokter: Flow<List<Dokter>> = repositoryJadwal.getAllNmDokter()
     var JUiState by mutableStateOf(JadUiState())
 
 
