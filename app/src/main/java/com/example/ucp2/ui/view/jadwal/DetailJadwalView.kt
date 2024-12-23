@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -97,13 +98,9 @@ fun ItemDetailJad(
     Card (
         modifier = modifier
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
     ) {
         Column (
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ){
             ComponentDetailJad(judul = "Id", isinya = jadwal.id)
             Spacer(modifier = Modifier.padding(4.dp))
@@ -157,7 +154,10 @@ fun BodyDetailMhs(
                 Spacer(modifier = Modifier.padding(8.dp))
                 Button(
                     onClick = { deleteConfirmationReuired = true },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0XFF000080)
+                    )
                 ) {
                     Text(text = "Delete")
                 }
@@ -210,11 +210,14 @@ fun DetailJadView(
             FloatingActionButton(
                 onClick = { onEditClick(viewModel.detailUiState.value.detailUiEvent.id) },
                 shape = MaterialTheme.shapes.medium,
+                containerColor = Color(0xFF000080),
                 modifier = Modifier.padding(16.dp)
+
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Jadwal"
+                    contentDescription = "Edit Jadwal",
+                    tint = Color.White,
                 )
             }
         }

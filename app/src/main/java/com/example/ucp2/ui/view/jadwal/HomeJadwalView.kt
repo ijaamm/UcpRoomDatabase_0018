@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,8 +32,11 @@ import androidx.compose.ui.unit.sp
 import com.example.ucp2.data.entity.Jadwal
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ucp2.ui.customwidget.TopAppBar
 import com.example.ucp2.viewmodel.HomeJadUiState
@@ -64,7 +66,8 @@ fun CardJad (
             ){
                 Icon(
                     imageVector = Icons.Filled.Person,
-                    contentDescription = ""
+                    contentDescription = "pasien",
+                    tint = Color.Black
                 )
                 Spacer(modifier = Modifier.padding(4.dp))
                 Text(
@@ -78,8 +81,9 @@ fun CardJad (
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Icon(
-                    imageVector = Icons.Filled.DateRange,
-                    contentDescription = ""
+                    imageVector = Icons.Filled.AccountBox,
+                    contentDescription = "dokter",
+                    tint = Color.Black
                 )
                 Spacer(modifier = Modifier.padding(4.dp))
                 Text(
@@ -93,8 +97,9 @@ fun CardJad (
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Icon(
-                    imageVector = Icons.Filled.Home,
-                    contentDescription = ""
+                    imageVector = Icons.Filled.DateRange,
+                    contentDescription = "tanggal",
+                    tint = Color.Black
                 )
                 Spacer(modifier = Modifier.padding(4.dp))
                 Text(
@@ -207,11 +212,13 @@ fun HomeJadView(
             FloatingActionButton(
                 onClick = onAddJad,
                 shape = MaterialTheme.shapes.medium,
+                containerColor = Color(0xFF000080),
                 modifier = Modifier.padding(16.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Tambah Jadwal"
+                    contentDescription = "Tambah Jadwal",
+                    tint = Color.White,
                 )
             }
         }

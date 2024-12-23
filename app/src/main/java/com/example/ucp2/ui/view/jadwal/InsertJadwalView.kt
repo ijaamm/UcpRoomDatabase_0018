@@ -2,10 +2,12 @@ package com.example.ucp2.ui.view.jadwal
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ucp2.ui.customwidget.DynamicSelectedTextField
 import com.example.ucp2.ui.customwidget.TopAppBar
 import com.example.ucp2.ui.navigation.RouteNavigation
 import com.example.ucp2.viewmodel.FormErrorJadwalState
@@ -43,10 +46,12 @@ fun FormJadwal(
     jadwalEvent: JadwalEvent = JadwalEvent(),
     onValueChange: (JadwalEvent) -> Unit = { },
     errorJadwalState: FormErrorJadwalState,
+    viewModel: JadwalViewModel = viewModel(factory = PenyediaViewModel.Factory),
     modifier: Modifier = Modifier
 ) {
-    val listNmDokter = listOf("Spesialis Anak", "Spesialis Gigi", "Spesialis Kulit", "Spesialis Bedah")
-    var expanded by rememberSaveable { mutableStateOf(false) }
+    var chosenDropdown by remember { mutableStateOf("") }
+
+    var PilihDokter by remember { mutableStateOf(listOf<String>()) }
 
     Column(
         modifier = modifier.fillMaxWidth()
@@ -60,39 +65,25 @@ fun FormJadwal(
         )
 
         // Dropdown for Spesialis
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(),
-                value = jadwalEvent.NmDokter,
-                onValueChange = { },
-                readOnly = true,
-                label = { Text("Nama Dokter") },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                isError = errorJadwalState.NmDokter != null
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                listNmDokter.forEach { NmDokter ->
-                    DropdownMenuItem(
-                        text = { Text(text = NmDokter) },
-                        onClick = {
-                            onValueChange(jadwalEvent.copy(NmDokter = NmDokter))
-                            expanded = false
-                        }
-                    )
-                }
+        LaunchedEffect (Unit) {
+            viewModel.listDokter.collect { dokterList ->
+                PilihDokter = dokterList.map { it.nama }
             }
         }
-        Text(text = errorJadwalState.NmDokter ?: "", color = Color.Red)
+
+        DynamicSelectedTextField(
+            selectedValue = chosenDropdown,
+            options = PilihDokter,
+            label = "Pilih Nama Dokter",
+            onValueChangedEvent = {
+                onValueChange(jadwalEvent.copy(NmDokter = it))
+                chosenDropdown = it
+            }
+        )
+        Text(
+            text = errorJadwalState.NmDokter ?: "",
+            color = Color.Red
+        )
 
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
@@ -153,7 +144,10 @@ fun InsertBodyJadwal(
         )
         Button(
             onClick = onClick,
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0XFF000080)
+            )
         ){
             Text(text = "Simpan")
         }
